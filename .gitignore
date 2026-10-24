@@ -14,9 +14,8 @@ data/*.csv
 data/*.zip
 *.parquet
 
-# Generated models
-models/*.pkl
-models/*.joblib
+# Generated models and evaluation outputs
+models/
 
 # Secrets and logs
 .streamlit/secrets.toml
