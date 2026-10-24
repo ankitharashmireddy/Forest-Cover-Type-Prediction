@@ -1,8 +1,15 @@
 
 import time
 
-from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
-from sklearn.metrics import accuracy_score, balanced_accuracy_score
+from sklearn.ensemble import (
+    ExtraTreesClassifier,
+    RandomForestClassifier,
+)
+from sklearn.metrics import (
+    accuracy_score,
+    balanced_accuracy_score,
+    recall_score,
+)
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 
@@ -27,12 +34,18 @@ def main():
         "Random Forest": RandomForestClassifier(
             n_estimators=100,
             random_state=42,
-            n_jobs=-1,
+            n_jobs=2,
         ),
         "Extra Trees": ExtraTreesClassifier(
+            n_estimators=50,
+            random_state=42,
+            n_jobs=2,
+        ),
+        "Balanced Random Forest": RandomForestClassifier(
             n_estimators=100,
             random_state=42,
             n_jobs=2,
+            class_weight="balanced_subsample",
         ),
     }
 
@@ -49,23 +62,36 @@ def main():
         accuracy = accuracy_score(y_test, predictions)
         balanced = balanced_accuracy_score(y_test, predictions)
 
-        results.append((name, accuracy, balanced, elapsed))
+        recalls = recall_score(
+            y_test,
+            predictions,
+            labels=[4, 5],
+            average=None,
+            zero_division=0,
+        )
+        recall_4, recall_5 = recalls
+
+        results.append(
+            (name, accuracy, balanced, recall_4, recall_5, elapsed)
+        )
 
         print(f"Accuracy:          {accuracy:.4f}")
         print(f"Balanced accuracy: {balanced:.4f}")
+        print(f"Class 4 recall:    {recall_4:.4f}")
+        print(f"Class 5 recall:    {recall_5:.4f}")
         print(f"Training + predict time: {elapsed:.1f} seconds")
 
     print("\nMODEL COMPARISON")
-    print("-" * 75)
+    print("-" * 100)
     print(
-        f"{'Model':<20} {'Accuracy':>12} "
-        f"{'Balanced Acc.':>15} {'Time (s)':>12}"
+        f"{'Model':<25} {'Accuracy':>10} {'Balanced Acc.':>15} "
+        f"{'Class 4 Recall':>15} {'Class 5 Recall':>15} {'Time (s)':>10}"
     )
 
-    for name, accuracy, balanced, elapsed in results:
+    for name, accuracy, balanced, recall_4, recall_5, elapsed in results:
         print(
-            f"{name:<20} {accuracy:>12.4f} "
-            f"{balanced:>15.4f} {elapsed:>12.1f}"
+            f"{name:<25} {accuracy:>10.4f} {balanced:>15.4f} "
+            f"{recall_4:>15.4f} {recall_5:>15.4f} {elapsed:>10.1f}"
         )
 
 

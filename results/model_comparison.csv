@@ -1,0 +1,5 @@
+﻿Model,Accuracy,Balanced_Accuracy,Class_4_Recall,Class_5_Recall,Runtime_Seconds
+Decision Tree,0.9389,0.9038,0.8488,0.8447,16.3
+Random Forest,0.9533,0.9053,0.8561,0.7699,116.2
+Extra Trees,0.9514,0.9069,0.8452,0.7846,47.7
+Balanced Random Forest,0.9548,0.9075,0.8452,0.7952,122.4
